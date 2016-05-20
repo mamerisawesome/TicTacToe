@@ -37,25 +37,30 @@ public class TicTacToe {
 	int pageFlag;
 	int currentPlayer;
 	int[][] config;
+	int tmpFlag;
 	
 	JLabel headerLabel;
 	
 	String symPlayer1;
 	String symPlayer2;
+	int ps;
 
-	public TicTacToe (JPanel headerPanel, JPanel tilesPanel, JPanel menuPanel, String sym1, String sym2) {
+	public TicTacToe (JPanel headerPanel, JPanel tilesPanel, JPanel menuPanel, String sym1, String sym2, int playerStart) {
 		
 		/*************************************************************************
 				INITIALIZATION
 		*/
 		
-		int tmpNum, num = 1;
+		int num = 1;
+		
+		tmpFlag = 0;
 		
 		tiles = new Tile[3][3];
 		currentPlayer = 1;
 		
 		symPlayer1 = sym1;
 		symPlayer2 = sym2;
+		ps = playerStart;
 		
 		headerLabel = new JLabel("Pios-Mendoza Dragonball Fusion!", SwingConstants.CENTER);
 		resetButton = new JButton ("Reset");
@@ -81,19 +86,25 @@ public class TicTacToe {
 						if (source instanceof Tile) {
                             Tile btn = (Tile)source;
 							if (btn.getValue() == 0) {
-								btn.toggleTile(currentPlayer, symPlayer1, symPlayer2);
 								
 								config = updateConfig(tiles);
 								if (goalTest(new State(config))) {
 									endGame(config, tiles, currentPlayer);
 								} else {
-									if (currentPlayer == 1) currentPlayer = 2;
-									else currentPlayer = 1;
-
-									startAI(tiles, currentPlayer);
+									btn.toggleTile(currentPlayer, symPlayer1, symPlayer2);
 									
-									if (currentPlayer == 1) currentPlayer = 2;
-									else currentPlayer = 1;
+									config = updateConfig(tiles);
+									if (goalTest(new State(config))) {
+										endGame(config, tiles, currentPlayer);
+									} else {
+										if (currentPlayer == 1) currentPlayer = 2;
+										else currentPlayer = 1;
+
+										startAI(tiles, currentPlayer);
+										
+										if (currentPlayer == 1) currentPlayer = 2;
+										else currentPlayer = 1;
+									}
 								}
 							}
                         }
@@ -122,6 +133,17 @@ public class TicTacToe {
 				}
 				
 				currentPlayer = 1;
+				
+				tmpFlag = 0;
+				
+				if (ps != JOptionPane.YES_OPTION && tmpFlag == 0) {
+					startAI(tiles, currentPlayer);
+					
+					if (currentPlayer == 1) currentPlayer = 2;
+					else currentPlayer = 1;
+					
+					tmpFlag += 1;
+				}
 			}
 		});
 		
@@ -158,6 +180,21 @@ public class TicTacToe {
 		
 		menuPanel.setBackground(Color.DARK_GRAY);
 		menuPanel.add(resetButton);
+		
+		/*************************************************************************/
+		
+		/*************************************************************************
+			AI INITIALIZATION
+		*/
+		
+		if (ps != JOptionPane.YES_OPTION && tmpFlag == 0) {
+			startAI(tiles, currentPlayer);
+			
+			if (currentPlayer == 1) currentPlayer = 2;
+			else currentPlayer = 1;
+			
+			tmpFlag += 1;
+		}
 		
 		/*************************************************************************/
 	}
