@@ -8,10 +8,12 @@ public class Tile extends JButton{
 
 	public Tile () {
 		value = 0;
+		this.setForeground(Color.WHITE);
 	}
 
 	public Tile (int val) {
 		value = val;
+		this.setForeground(Color.WHITE);
 	}
 	
 	public void toggleTile (int player, String symPlayer1, String symPlayer2) {
@@ -24,6 +26,8 @@ public class Tile extends JButton{
 			this.setText("" + symPlayer2);
 			this.setValue(player);
 		}
+		
+		
 	}
 	
 	public int getValue () {

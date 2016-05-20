@@ -15,16 +15,10 @@ public class MendozaPiosEx10 {
 	JPanel menuPanel = new JPanel();
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	
-	int playerStart = JOptionPane.showConfirmDialog(
-		frame,
-		"Start as first player?",
-		"An Inane Question",
-		JOptionPane.YES_NO_OPTION);
-		
 	String symPlayer1 = JOptionPane.showInputDialog("Input symbol for player 1");
 	String symPlayer2 = JOptionPane.showInputDialog("Input symbol for player 2");
 
-	TicTacToe tictactoe = new TicTacToe(headerPanel, bodyPanel, menuPanel, symPlayer1, symPlayer2, playerStart);
+	TicTacToe tictactoe = new TicTacToe(headerPanel, bodyPanel, menuPanel, symPlayer1, symPlayer2);
 
 	// positioning elements
 	frame.getContentPane().add(headerPanel, BorderLayout.NORTH);

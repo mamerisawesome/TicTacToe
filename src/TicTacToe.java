@@ -19,6 +19,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.Font;
 
 import java.util.LinkedList;
 import java.util.Random;
@@ -37,36 +38,32 @@ public class TicTacToe {
 	int pageFlag;
 	int currentPlayer;
 	int[][] config;
-	int tmpFlag;
 	
 	JLabel headerLabel;
 	
 	String symPlayer1;
 	String symPlayer2;
-	int ps;
 
-	public TicTacToe (JPanel headerPanel, JPanel tilesPanel, JPanel menuPanel, String sym1, String sym2, int playerStart) {
+	public TicTacToe (JPanel headerPanel, JPanel tilesPanel, JPanel menuPanel, String sym1, String sym2) {
 		
 		/*************************************************************************
 				INITIALIZATION
 		*/
 		
-		int num = 1;
-		
-		tmpFlag = 0;
+		int tmpNum, num = 1;
 		
 		tiles = new Tile[3][3];
 		currentPlayer = 1;
 		
 		symPlayer1 = sym1;
 		symPlayer2 = sym2;
-		ps = playerStart;
 		
 		headerLabel = new JLabel("Pios-Mendoza Dragonball Fusion!", SwingConstants.CENTER);
 		resetButton = new JButton ("Reset");
 		for (int i = 0; i < 3; i += 1) {
 			for (int j = 0; j < 3; j += 1) {
-				tiles[i][j] = new Tile();				
+				tiles[i][j] = new Tile();
+				tiles[i][j].setFont(new Font("Arial", Font.PLAIN, 96));
 			}
 		}
 		
@@ -86,25 +83,19 @@ public class TicTacToe {
 						if (source instanceof Tile) {
                             Tile btn = (Tile)source;
 							if (btn.getValue() == 0) {
+								btn.toggleTile(currentPlayer, symPlayer1, symPlayer2);
 								
 								config = updateConfig(tiles);
 								if (goalTest(new State(config))) {
 									endGame(config, tiles, currentPlayer);
 								} else {
-									btn.toggleTile(currentPlayer, symPlayer1, symPlayer2);
-									
-									config = updateConfig(tiles);
-									if (goalTest(new State(config))) {
-										endGame(config, tiles, currentPlayer);
-									} else {
-										if (currentPlayer == 1) currentPlayer = 2;
-										else currentPlayer = 1;
+									if (currentPlayer == 1) currentPlayer = 2;
+									else currentPlayer = 1;
 
-										startAI(tiles, currentPlayer);
-										
-										if (currentPlayer == 1) currentPlayer = 2;
-										else currentPlayer = 1;
-									}
+									startAI(tiles, currentPlayer);
+									
+									if (currentPlayer == 1) currentPlayer = 2;
+									else currentPlayer = 1;
 								}
 							}
                         }
@@ -133,17 +124,6 @@ public class TicTacToe {
 				}
 				
 				currentPlayer = 1;
-				
-				tmpFlag = 0;
-				
-				if (ps != JOptionPane.YES_OPTION && tmpFlag == 0) {
-					startAI(tiles, currentPlayer);
-					
-					if (currentPlayer == 1) currentPlayer = 2;
-					else currentPlayer = 1;
-					
-					tmpFlag += 1;
-				}
 			}
 		});
 		
@@ -180,21 +160,6 @@ public class TicTacToe {
 		
 		menuPanel.setBackground(Color.DARK_GRAY);
 		menuPanel.add(resetButton);
-		
-		/*************************************************************************/
-		
-		/*************************************************************************
-			AI INITIALIZATION
-		*/
-		
-		if (ps != JOptionPane.YES_OPTION && tmpFlag == 0) {
-			startAI(tiles, currentPlayer);
-			
-			if (currentPlayer == 1) currentPlayer = 2;
-			else currentPlayer = 1;
-			
-			tmpFlag += 1;
-		}
 		
 		/*************************************************************************/
 	}
@@ -271,13 +236,44 @@ public class TicTacToe {
 	
 	public void startAI (Tile[][] tiles, int currentPlayer) {
 		int[][] config;
+		config = updateConfig(tiles);
+		 
 		String almer = "weird";
 		while (almer != "is cute") {
-			int x = new Random().nextInt(3);
-			int y = new Random().nextInt(3);
 			
 			if (fullBoard(tiles) == true) break;
 			
+			
+			State currentState = new State(config, 1);
+            State bestMove = currentState;
+			State oldState = currentState;
+			
+			
+			
+			/*
+			for(int i=0; i<3; i++){
+			    for(int j=0; j<3; j++){
+			        if(tiles[i][j].getValue() == 0){
+                           tiles[i][j].toggleTile(currentPlayer, symPlayer1, symPlayer2);
+                           config = updateConfig(tiles);
+                           
+                           State newState = new State(config, oldState);
+                           
+                           if(goalTest(newState)){
+                                newState.setType(0);
+                                newState.computeUtility();
+                           }else if(newState.getParent().getNodeType() == 1){
+                                newState.setType(-1);
+                           }else{
+                                newState.setType(1);
+                           }
+                           currentState.getNodes().add(newState);
+			        }
+			    }
+			}
+			*/
+			
+			/*
 			if (tiles[x][y].getValue() == 0) {
 				tiles[x][y].toggleTile(currentPlayer, symPlayer1, symPlayer2);
 		
@@ -286,6 +282,7 @@ public class TicTacToe {
 				
 				break;
 			}
+			*/
 		}
 	}
 }
